@@ -7,7 +7,7 @@ from .models import User
 @admin.register(User)
 class CustomUserAdmin(UserAdmin):
     """Manage users in the admin. Extends Django's UserAdmin and surfaces the
-    custom `role` field (SPEC §9)."""
+    custom `role` field."""
 
     list_display = ("username", "email", "role", "is_staff", "is_active")
     list_filter = ("role", "is_staff", "is_active")

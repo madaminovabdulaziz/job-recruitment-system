@@ -7,7 +7,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     # Auth: register/login/logout/dashboard.
     path("", include("accounts.urls")),
-    # Read-only REST API (SPEC §7).
+    # Read-only REST API.
     path("api/", include("api.urls")),
     # Login/logout for the DRF browsable API (testing the gated endpoint).
     path("api-auth/", include("rest_framework.urls")),

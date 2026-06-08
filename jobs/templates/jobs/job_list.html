@@ -5,7 +5,6 @@
 {% block content %}
     <h1 class="mb-3">Open Positions</h1>
 
-    {# Server-side search on title/location (SPEC §6). #}
     <form method="get" class="row g-2 mb-3">
         <div class="col-sm-8 col-md-6">
             <input type="text" name="q" value="{{ q }}" class="form-control"
@@ -25,8 +24,6 @@
         <p class="text-muted">Showing results for "{{ q }}".</p>
     {% endif %}
 
-    {# Optional client-side filter: instantly narrows the jobs already shown
-       below, no page reload (SPEC §10). Hidden if there are no jobs. #}
     {% if jobs %}
     <div class="row g-2 mb-4">
         <div class="col-sm-8 col-md-6">
@@ -38,7 +35,6 @@
 
     <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" id="job-grid">
         {% for job in jobs %}
-            {# data-search holds the lowercased text the client-side filter matches. #}
             <div class="col job-card"
                  data-search="{{ job.title|lower }} {{ job.company.name|lower }} {{ job.location|lower }} {{ job.get_employment_type_display|lower }}">
                 <div class="card h-100 shadow-sm">
@@ -61,13 +57,12 @@
         {% endfor %}
     </div>
 
-    {# Shown by the filter only when nothing on the page matches. #}
     <p id="no-matches" class="text-muted d-none">No jobs match your filter.</p>
 
     {% if jobs %}
     <script>
         // Client-side filter: hide cards whose data-search text doesn't contain
-        // what's typed. Pure vanilla JS, runs on the already-rendered page (SPEC §10).
+        // what's typed. Runs on the already-rendered page, no reload.
         (function () {
             const input = document.getElementById("job-filter");
             const cards = document.querySelectorAll("#job-grid .job-card");

@@ -25,7 +25,6 @@
                 <td>{{ app.created_at|date:"d M Y" }}</td>
                 <td style="max-width: 18rem; white-space: pre-line;">{{ app.cover_letter }}</td>
                 <td>
-                    {# Inline status update via ModelForm posting to update_status. #}
                     <form method="post" action="{% url 'update_status' app.pk %}"
                           class="d-flex gap-2">
                         {% csrf_token %}

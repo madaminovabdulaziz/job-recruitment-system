@@ -3,7 +3,7 @@ from django.db import models
 
 
 class CompanyProfile(models.Model):
-    """An employer's company profile. One profile per employer user (SPEC §5.2)."""
+    """An employer's company profile. One profile per employer user."""
 
     owner = models.OneToOneField(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
@@ -18,7 +18,7 @@ class CompanyProfile(models.Model):
 
 
 class Job(models.Model):
-    """A vacancy posted by a company (SPEC §5.3)."""
+    """A vacancy posted by a company."""
 
     class EmploymentType(models.TextChoices):
         FULL_TIME = "full_time", "Full time"
@@ -43,8 +43,7 @@ class Job(models.Model):
 
 
 class Application(models.Model):
-    """A candidate's application to a job. One application per job per candidate
-    (SPEC §5.4)."""
+    """A candidate's application to a job. One application per job per candidate."""
 
     class Status(models.TextChoices):
         APPLIED = "applied", "Applied"
@@ -64,7 +63,7 @@ class Application(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        # One application per job per candidate (SPEC §5.4).
+        # One application per job per candidate.
         unique_together = ("job", "candidate")
 
     def __str__(self):
@@ -72,8 +71,7 @@ class Application(models.Model):
 
 
 class Interview(models.Model):
-    """An interview scheduled for an application. One interview per application
-    (SPEC §5.5)."""
+    """An interview scheduled for an application. One interview per application."""
 
     class Mode(models.TextChoices):
         ONSITE = "onsite", "Onsite"

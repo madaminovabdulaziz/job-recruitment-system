@@ -11,7 +11,7 @@ from .serializers import (
 
 
 class JobListAPIView(generics.ListAPIView):
-    """GET /api/jobs/ — list active jobs. Public, read-only (SPEC §7)."""
+    """GET /api/jobs/ — list active jobs. Public, read-only."""
 
     serializer_class = JobListSerializer
     permission_classes = [AllowAny]
@@ -29,7 +29,7 @@ class JobDetailAPIView(generics.RetrieveAPIView):
 
 class ApplicationListAPIView(generics.ListAPIView):
     """GET /api/applications/ — the logged-in user's own applications only.
-    Permission-gated: anonymous requests are rejected (SPEC §7)."""
+    Permission-gated: anonymous requests are rejected."""
 
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]

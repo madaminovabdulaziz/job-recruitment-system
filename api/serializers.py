@@ -4,7 +4,7 @@ from jobs.models import Application, Job
 
 
 class JobListSerializer(serializers.ModelSerializer):
-    """Compact job representation for the list endpoint (SPEC §7):
+    """Compact job representation for the list endpoint:
     id, title, company name, location, type, created_at."""
 
     company_name = serializers.CharField(source="company.name", read_only=True)
@@ -35,7 +35,7 @@ class JobDetailSerializer(JobListSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    """A candidate's own application (SPEC §7). Includes the job title and
+    """A candidate's own application. Includes the job title and
     company so the response is readable without extra lookups."""
 
     job_title = serializers.CharField(source="job.title", read_only=True)

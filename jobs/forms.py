@@ -17,7 +17,7 @@ def _bootstrap(fields):
 
 
 class JobForm(forms.ModelForm):
-    """Create/update form for a Job (SPEC §4 CRUD). The owning company is set
+    """Create/update form for a Job. The owning company is set
     in the view from the logged-in employer, so it isn't a form field."""
 
     class Meta:
@@ -39,7 +39,7 @@ class JobForm(forms.ModelForm):
 
 class ApplicationForm(forms.ModelForm):
     """A candidate's application to a job — just the cover letter. The job and
-    candidate are set in the view (SPEC §5.4)."""
+    candidate are set in the view."""
 
     class Meta:
         model = Application
@@ -52,7 +52,7 @@ class ApplicationForm(forms.ModelForm):
 
 
 class StatusForm(forms.ModelForm):
-    """Employer-side form to change an application's status (SPEC §6)."""
+    """Employer-side form to change an application's status."""
 
     class Meta:
         model = Application
@@ -65,7 +65,7 @@ class StatusForm(forms.ModelForm):
 
 
 class InterviewForm(forms.ModelForm):
-    """Create/edit the interview for an application (SPEC §5.5, §6)."""
+    """Create/edit the interview for an application."""
 
     class Meta:
         model = Interview

@@ -9,7 +9,7 @@ from .forms import ApplicationForm, InterviewForm, JobForm, StatusForm
 from .models import Application, Interview, Job
 
 
-# --- Public job browsing (SPEC §6) ---
+# --- Public job browsing ---
 
 def job_list(request):
     """Public landing page: active jobs as cards, with a simple search on
@@ -41,7 +41,7 @@ def job_detail(request, pk):
     )
 
 
-# --- Ownership helpers (SPEC §8) ---
+# --- Ownership helpers ---
 
 def _own_jobs(user):
     """Jobs owned by this employer. Scoping every employer query through this

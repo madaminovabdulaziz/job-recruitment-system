@@ -10,7 +10,6 @@
         <form method="post" novalidate>
             {% csrf_token %}
 
-            {# Account fields: username, password1, password2, email, role #}
             {% for field in form %}
                 {% if not field.name|slice:":8" == "company_" %}
                     <div class="mb-3">
@@ -28,7 +27,6 @@
                 {% endif %}
             {% endfor %}
 
-            {# Company fields: shown only when "Employer" is selected (see JS). #}
             <fieldset id="company-fields" class="border rounded p-3 mb-3 d-none">
                 <legend class="h6">Company details</legend>
                 {% for field in form %}
@@ -53,7 +51,6 @@
     </div>
 </div>
 
-{# Minimal vanilla JS: reveal the company fields only for employers (SPEC §10). #}
 <script>
     (function () {
         const companyFields = document.getElementById("company-fields");

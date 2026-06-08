@@ -32,7 +32,6 @@
         <h5 class="mt-4">Description</h5>
         <p style="white-space: pre-line;">{{ job.description }}</p>
 
-        {# Apply action depends on auth state / role (SPEC §8). #}
         <div class="mt-4">
             {% if user.is_authenticated %}
                 {% if user.role == "candidate" %}

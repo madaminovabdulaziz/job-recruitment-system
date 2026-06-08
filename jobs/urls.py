@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-# Named routes for the jobs app (SPEC §6).
+# Named routes for the jobs app.
 urlpatterns = [
     # Public
     path("", views.job_list, name="job_list"),

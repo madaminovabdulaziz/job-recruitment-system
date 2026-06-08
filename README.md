@@ -1,8 +1,7 @@
 # Job Recruitment System
 
-A Django (MVT) job recruitment portal built for **5COSC017C Full Stack Web Development (CW2)**.
-Employers post vacancies and manage applicants; candidates browse jobs, apply, and track their
-applications. See `SPEC.md` for the full specification (the source of truth).
+A Django (MVT) job recruitment portal. Employers post vacancies and manage applicants;
+candidates browse jobs, apply, and track their applications.
 
 ## Features
 
@@ -85,7 +84,7 @@ The repo includes `Procfile`, `build.sh`, and `runtime.txt`.
 When `DEBUG=False`, the app serves static files through WhiteNoise and forces HTTPS
 (secure cookies + SSL redirect). HTTPS itself is provided by the host.
 
-> **PythonAnywhere** is also supported (per the brief): use the same env vars and run
+> **PythonAnywhere** is also supported: use the same env vars and run
 > `pip install -r requirements.txt`, `collectstatic`, and `migrate` manually, with the WSGI
 > file pointing at `recruitment.wsgi`.
 

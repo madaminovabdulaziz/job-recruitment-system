@@ -2,7 +2,7 @@ from django.urls import path
 
 from . import views
 
-# Read-only REST API (SPEC §7).
+# Read-only REST API.
 urlpatterns = [
     path("jobs/", views.JobListAPIView.as_view(), name="api_job_list"),
     path("jobs/<int:pk>/", views.JobDetailAPIView.as_view(), name="api_job_detail"),

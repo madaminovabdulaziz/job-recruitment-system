@@ -8,7 +8,6 @@
     <a href="{% url 'job_create' %}" class="btn btn-primary">+ Post a Job</a>
 </div>
 
-{# Summary cards (employer dashboard). #}
 <div class="row g-3 mb-4">
     <div class="col-4">
         <div class="card text-center"><div class="card-body">
@@ -66,7 +65,6 @@
                        class="btn btn-sm btn-outline-primary">Applicants</a>
                     <a href="{% url 'job_edit' job.pk %}"
                        class="btn btn-sm btn-outline-secondary">Edit</a>
-                    {# Delete posts directly, guarded by a JS confirm (SPEC §10). #}
                     <form method="post" action="{% url 'job_delete' job.pk %}"
                           class="d-inline"
                           onsubmit="return confirm('Delete job &quot;{{ job.title|escapejs }}&quot;? This cannot be undone.');">

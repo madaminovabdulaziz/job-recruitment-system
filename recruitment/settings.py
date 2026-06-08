@@ -107,10 +107,10 @@ DATABASES = {
 }
 
 
-# Custom user model (must be set before the first migration). See SPEC §5.1.
+# Custom user model (must be set before the first migration).
 AUTH_USER_MODEL = "accounts.User"
 
-# Authentication redirects (SPEC §8).
+# Authentication redirects.
 LOGIN_URL = "login"                 # where @login_required sends anonymous users
 LOGIN_REDIRECT_URL = "dashboard"    # after login → role-aware dashboard redirect
 LOGOUT_REDIRECT_URL = "job_list"    # after logout → public job list
@@ -165,7 +165,7 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Production-only security settings (applied when DEBUG=False). The host
 # (Render/PythonAnywhere) terminates HTTPS, so we trust its forwarded header
-# and redirect any plain HTTP to HTTPS. (SPEC §11, §12.)
+# and redirect any plain HTTP to HTTPS.
 if not DEBUG:
     SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
     SECURE_SSL_REDIRECT = True

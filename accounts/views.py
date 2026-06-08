@@ -10,7 +10,7 @@ from .models import User
 
 
 def register(request):
-    """Register a new account and choose a role (SPEC §2, §8).
+    """Register a new account and choose a role.
 
     Anyone (anonymous) can register. Employers also get a CompanyProfile
     created from the company fields on the form. On success the user is logged
@@ -42,7 +42,7 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    """Send a logged-in user to the right dashboard for their role (SPEC §6)."""
+    """Send a logged-in user to the right dashboard for their role."""
     if request.user.role == User.Role.EMPLOYER:
         return redirect("employer_jobs")
     return redirect("my_applications")

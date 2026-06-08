@@ -8,7 +8,7 @@ class RegisterForm(UserCreationForm):
     """Registration form: standard username/password plus a required role.
 
     When the user picks "employer", the company fields become required so we
-    can create their CompanyProfile in the same step (SPEC §2, §5.2).
+    can create their CompanyProfile in the same step.
     """
 
     email = forms.EmailField(required=True)
