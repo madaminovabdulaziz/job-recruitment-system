@@ -38,6 +38,13 @@ CSRF_TRUSTED_ORIGINS = [
     if origin
 ]
 
+# Render injects the service's public hostname automatically. Trust it so the
+# deploy serves correctly without manually setting ALLOWED_HOSTS for the domain.
+RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+    CSRF_TRUSTED_ORIGINS.append(f"https://{RENDER_EXTERNAL_HOSTNAME}")
+
 
 # Application definition
 
