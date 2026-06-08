@@ -14,7 +14,6 @@ staticfiles/
 # OS
 .DS_Store
 
-# Coursework / process docs — keep local, not in repo
-SPEC.md
-CLAUDE.md
-PROMPTS.md
+# Local-only docs — keep out of the repo (README stays tracked)
+*.md
+!README.md
