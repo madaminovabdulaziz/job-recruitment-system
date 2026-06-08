@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block title %}Register &middot; Recruitment{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-7">
+        <h1 class="mb-4">Create an account</h1>
+
+        <form method="post" novalidate>
+            {% csrf_token %}
+
+            {# Account fields: username, password1, password2, email, role #}
+            {% for field in form %}
+                {% if not field.name|slice:":8" == "company_" %}
+                    <div class="mb-3">
+                        <label class="form-label" for="{{ field.id_for_label }}">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                        {% for error in field.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            {% endfor %}
+
+            {# Company fields: shown only when "Employer" is selected (see JS). #}
+            <fieldset id="company-fields" class="border rounded p-3 mb-3 d-none">
+                <legend class="h6">Company details</legend>
+                {% for field in form %}
+                    {% if field.name|slice:":8" == "company_" %}
+                        <div class="mb-3">
+                            <label class="form-label" for="{{ field.id_for_label }}">
+                                {{ field.label }}
+                            </label>
+                            {{ field }}
+                            {% for error in field.errors %}
+                                <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </fieldset>
+
+            <button type="submit" class="btn btn-primary">Register</button>
+        </form>
+
+        <p class="mt-3">Already have an account? <a href="{% url 'login' %}">Log in</a>.</p>
+    </div>
+</div>
+
+{# Minimal vanilla JS: reveal the company fields only for employers (SPEC §10). #}
+<script>
+    (function () {
+        const companyFields = document.getElementById("company-fields");
+        const roleRadios = document.querySelectorAll('input[name="role"]');
+
+        function toggleCompanyFields() {
+            const selected = document.querySelector('input[name="role"]:checked');
+            const isEmployer = selected && selected.value === "employer";
+            companyFields.classList.toggle("d-none", !isEmployer);
+        }
+
+        roleRadios.forEach(r => r.addEventListener("change", toggleCompanyFields));
+        toggleCompanyFields();  // run once on load (keeps state after a failed submit)
+    })();
+</script>
+{% endblock %}

@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}{{ job.title }} &middot; Recruitment{% endblock %}
+
+{% block content %}
+<div class="row">
+    <div class="col-lg-8">
+        <a href="{% url 'job_list' %}" class="text-decoration-none">&larr; Back to jobs</a>
+
+        <h1 class="mt-2 mb-1">{{ job.title }}</h1>
+        <p class="text-muted mb-3">
+            {{ job.company.name }} &middot; {{ job.location }}
+            {% if not job.is_active %}
+                <span class="badge bg-warning text-dark">Closed</span>
+            {% endif %}
+        </p>
+
+        <ul class="list-inline">
+            <li class="list-inline-item">
+                <span class="badge bg-secondary">{{ job.get_employment_type_display }}</span>
+            </li>
+            {% if job.salary_min or job.salary_max %}
+                <li class="list-inline-item text-muted">
+                    Salary:
+                    {% if job.salary_min %}{{ job.salary_min }}{% else %}&mdash;{% endif %}
+                    &ndash;
+                    {% if job.salary_max %}{{ job.salary_max }}{% else %}&mdash;{% endif %}
+                </li>
+            {% endif %}
+        </ul>
+
+        <h5 class="mt-4">Description</h5>
+        <p style="white-space: pre-line;">{{ job.description }}</p>
+
+        {# Apply action depends on auth state / role (SPEC §8). #}
+        <div class="mt-4">
+            {% if user.is_authenticated %}
+                {% if user.role == "candidate" %}
+                    {% if already_applied %}
+                        <span class="badge bg-success">You've applied</span>
+                        <a href="{% url 'my_applications' %}" class="ms-2">View my applications</a>
+                    {% elif job.is_active %}
+                        <a href="{% url 'apply' job.pk %}" class="btn btn-success">Apply now</a>
+                    {% else %}
+                        <span class="text-muted">This job is closed.</span>
+                    {% endif %}
+                {% endif %}
+            {% else %}
+                <a href="{% url 'login' %}?next={% url 'job_detail' job.pk %}"
+                   class="btn btn-success">Log in to apply</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}

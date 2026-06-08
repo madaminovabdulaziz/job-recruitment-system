@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+
+{% block title %}My Jobs &middot; Recruitment{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="mb-0">My Jobs</h1>
+    <a href="{% url 'job_create' %}" class="btn btn-primary">+ Post a Job</a>
+</div>
+
+{# Summary cards (employer dashboard). #}
+<div class="row g-3 mb-4">
+    <div class="col-4">
+        <div class="card text-center"><div class="card-body">
+            <div class="h3 mb-0">{{ summary.total_jobs }}</div>
+            <div class="text-muted small">Jobs</div>
+        </div></div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center"><div class="card-body">
+            <div class="h3 mb-0">{{ summary.active_jobs }}</div>
+            <div class="text-muted small">Active</div>
+        </div></div>
+    </div>
+    <div class="col-4">
+        <div class="card text-center"><div class="card-body">
+            <div class="h3 mb-0">{{ summary.total_applicants }}</div>
+            <div class="text-muted small">Applicants</div>
+        </div></div>
+    </div>
+</div>
+
+{% if jobs %}
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Type</th>
+                <th>Location</th>
+                <th>Status</th>
+                <th class="text-center">Applicants</th>
+                <th class="text-end">Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for job in jobs %}
+            <tr>
+                <td>
+                    <a href="{% url 'job_detail' job.pk %}">{{ job.title }}</a>
+                </td>
+                <td>{{ job.get_employment_type_display }}</td>
+                <td>{{ job.location }}</td>
+                <td>
+                    {% if job.is_active %}
+                        <span class="badge bg-success">Active</span>
+                    {% else %}
+                        <span class="badge bg-secondary">Closed</span>
+                    {% endif %}
+                </td>
+                <td class="text-center">
+                    <a href="{% url 'job_applicants' job.pk %}">{{ job.num_applicants }}</a>
+                </td>
+                <td class="text-end">
+                    <a href="{% url 'job_applicants' job.pk %}"
+                       class="btn btn-sm btn-outline-primary">Applicants</a>
+                    <a href="{% url 'job_edit' job.pk %}"
+                       class="btn btn-sm btn-outline-secondary">Edit</a>
+                    {# Delete posts directly, guarded by a JS confirm (SPEC §10). #}
+                    <form method="post" action="{% url 'job_delete' job.pk %}"
+                          class="d-inline"
+                          onsubmit="return confirm('Delete job &quot;{{ job.title|escapejs }}&quot;? This cannot be undone.');">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-outline-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="text-muted">You haven't posted any jobs yet.</p>
+{% endif %}
+{% endblock %}

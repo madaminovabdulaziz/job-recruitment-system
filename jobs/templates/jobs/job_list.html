@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block title %}Jobs &middot; Recruitment{% endblock %}
+
+{% block content %}
+    <h1 class="mb-3">Open Positions</h1>
+
+    {# Server-side search on title/location (SPEC §6). #}
+    <form method="get" class="row g-2 mb-3">
+        <div class="col-sm-8 col-md-6">
+            <input type="text" name="q" value="{{ q }}" class="form-control"
+                   placeholder="Search by title or location">
+        </div>
+        <div class="col-auto">
+            <button type="submit" class="btn btn-primary">Search</button>
+        </div>
+        {% if q %}
+            <div class="col-auto">
+                <a href="{% url 'job_list' %}" class="btn btn-outline-secondary">Clear</a>
+            </div>
+        {% endif %}
+    </form>
+
+    {% if q %}
+        <p class="text-muted">Showing results for "{{ q }}".</p>
+    {% endif %}
+
+    {# Optional client-side filter: instantly narrows the jobs already shown
+       below, no page reload (SPEC §10). Hidden if there are no jobs. #}
+    {% if jobs %}
+    <div class="row g-2 mb-4">
+        <div class="col-sm-8 col-md-6">
+            <input type="text" id="job-filter" class="form-control"
+                   placeholder="Quick filter these results…" autocomplete="off">
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3" id="job-grid">
+        {% for job in jobs %}
+            {# data-search holds the lowercased text the client-side filter matches. #}
+            <div class="col job-card"
+                 data-search="{{ job.title|lower }} {{ job.company.name|lower }} {{ job.location|lower }} {{ job.get_employment_type_display|lower }}">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body d-flex flex-column">
+                        <h5 class="card-title">{{ job.title }}</h5>
+                        <h6 class="card-subtitle mb-2 text-muted">{{ job.company.name }}</h6>
+                        <p class="card-text mb-1">
+                            <span class="badge bg-secondary">{{ job.get_employment_type_display }}</span>
+                            <span class="text-muted ms-1">{{ job.location }}</span>
+                        </p>
+                        <a href="{% url 'job_detail' job.pk %}"
+                           class="btn btn-outline-primary mt-auto">View details</a>
+                    </div>
+                </div>
+            </div>
+        {% empty %}
+            <div class="col-12">
+                <p class="text-muted">No jobs found.</p>
+            </div>
+        {% endfor %}
+    </div>
+
+    {# Shown by the filter only when nothing on the page matches. #}
+    <p id="no-matches" class="text-muted d-none">No jobs match your filter.</p>
+
+    {% if jobs %}
+    <script>
+        // Client-side filter: hide cards whose data-search text doesn't contain
+        // what's typed. Pure vanilla JS, runs on the already-rendered page (SPEC §10).
+        (function () {
+            const input = document.getElementById("job-filter");
+            const cards = document.querySelectorAll("#job-grid .job-card");
+            const noMatches = document.getElementById("no-matches");
+
+            input.addEventListener("input", function () {
+                const term = input.value.trim().toLowerCase();
+                let visible = 0;
+                cards.forEach(function (card) {
+                    const match = card.dataset.search.includes(term);
+                    card.classList.toggle("d-none", !match);
+                    if (match) visible++;
+                });
+                noMatches.classList.toggle("d-none", visible !== 0);
+            });
+        })();
+    </script>
+    {% endif %}
+{% endblock %}

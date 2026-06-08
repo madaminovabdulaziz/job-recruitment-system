@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+
+{% block title %}Applicants &middot; {{ job.title }}{% endblock %}
+
+{% block content %}
+<a href="{% url 'employer_jobs' %}" class="text-decoration-none">&larr; Back to my jobs</a>
+<h1 class="mt-2 mb-3">Applicants: {{ job.title }}</h1>
+
+{% if rows %}
+<div class="table-responsive">
+    <table class="table align-middle">
+        <thead>
+            <tr>
+                <th>Candidate</th>
+                <th>Applied</th>
+                <th>Cover letter</th>
+                <th>Status</th>
+                <th>Interview</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for app, status_form in rows %}
+            <tr>
+                <td>{{ app.candidate.username }}</td>
+                <td>{{ app.created_at|date:"d M Y" }}</td>
+                <td style="max-width: 18rem; white-space: pre-line;">{{ app.cover_letter }}</td>
+                <td>
+                    {# Inline status update via ModelForm posting to update_status. #}
+                    <form method="post" action="{% url 'update_status' app.pk %}"
+                          class="d-flex gap-2">
+                        {% csrf_token %}
+                        {{ status_form.status }}
+                        <button type="submit" class="btn btn-sm btn-primary">Save</button>
+                    </form>
+                </td>
+                <td>
+                    {% if app.interview %}
+                        <div class="small">
+                            {{ app.interview.scheduled_at|date:"d M Y, H:i" }}
+                            ({{ app.interview.get_mode_display }})
+                        </div>
+                        <a href="{% url 'schedule_interview' app.pk %}"
+                           class="btn btn-sm btn-outline-secondary">Edit</a>
+                    {% else %}
+                        <a href="{% url 'schedule_interview' app.pk %}"
+                           class="btn btn-sm btn-outline-primary">Schedule</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+    <p class="text-muted">No applicants yet for this job.</p>
+{% endif %}
+{% endblock %}
