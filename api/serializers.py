@@ -4,9 +4,6 @@ from jobs.models import Application, Job
 
 
 class JobListSerializer(serializers.ModelSerializer):
-    """Compact job representation for the list endpoint:
-    id, title, company name, location, type, created_at."""
-
     company_name = serializers.CharField(source="company.name", read_only=True)
 
     class Meta:
@@ -22,9 +19,6 @@ class JobListSerializer(serializers.ModelSerializer):
 
 
 class JobDetailSerializer(JobListSerializer):
-    """Fuller job representation for the detail endpoint — adds description,
-    salary range and active flag on top of the list fields."""
-
     class Meta(JobListSerializer.Meta):
         fields = JobListSerializer.Meta.fields + [
             "description",
@@ -35,9 +29,6 @@ class JobDetailSerializer(JobListSerializer):
 
 
 class ApplicationSerializer(serializers.ModelSerializer):
-    """A candidate's own application. Includes the job title and
-    company so the response is readable without extra lookups."""
-
     job_title = serializers.CharField(source="job.title", read_only=True)
     company_name = serializers.CharField(source="job.company.name", read_only=True)
 

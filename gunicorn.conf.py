@@ -8,8 +8,6 @@ and start commands (i.e. without running build.sh).
 
 
 def on_starting(server):
-    """Prepare the app before workers start: gather static files (for WhiteNoise)
-    and apply any pending database migrations."""
     import os
 
     import django

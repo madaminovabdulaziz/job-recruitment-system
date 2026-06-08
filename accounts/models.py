@@ -3,10 +3,6 @@ from django.db import models
 
 
 class User(AbstractUser):
-    """Custom user model. Every user is either a candidate or an employer,
-    chosen at registration. Extending AbstractUser keeps Django's
-    built-in username/email/password/auth machinery."""
-
     class Role(models.TextChoices):
         CANDIDATE = "candidate", "Candidate"
         EMPLOYER = "employer", "Employer"

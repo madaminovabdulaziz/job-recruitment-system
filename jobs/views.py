@@ -12,8 +12,6 @@ from .models import Application, Interview, Job
 # --- Public job browsing ---
 
 def job_list(request):
-    """Public landing page: active jobs as cards, with a simple search on
-    title/location via the `q` query parameter. Public access."""
     q = request.GET.get("q", "").strip()
     jobs = (
         Job.objects.filter(is_active=True)
@@ -26,8 +24,6 @@ def job_list(request):
 
 
 def job_detail(request, pk):
-    """Public detail page for a single job. Shows an Apply button to candidates
-    who haven't applied yet. Public access."""
     job = get_object_or_404(Job, pk=pk)
     already_applied = (
         request.user.is_authenticated
@@ -44,14 +40,10 @@ def job_detail(request, pk):
 # --- Ownership helpers ---
 
 def _own_jobs(user):
-    """Jobs owned by this employer. Scoping every employer query through this
-    means an employer can only ever see/edit/delete their own jobs."""
     return Job.objects.filter(company__owner=user)
 
 
 def _employer_applications(user):
-    """Applications to this employer's jobs — used to gate status/interview
-    actions so an employer can only act on applications to their own jobs."""
     return Application.objects.filter(job__company__owner=user)
 
 
@@ -59,8 +51,6 @@ def _employer_applications(user):
 
 @role_required(User.Role.CANDIDATE)
 def apply_to_job(request, pk):
-    """Apply to an active job. One application per job per candidate — a
-    duplicate is blocked here (and by the DB unique constraint). Candidate-only."""
     job = get_object_or_404(Job, pk=pk, is_active=True)
 
     if Application.objects.filter(job=job, candidate=request.user).exists():
@@ -84,8 +74,6 @@ def apply_to_job(request, pk):
 
 @role_required(User.Role.CANDIDATE)
 def withdraw_application(request, pk):
-    """Withdraw (delete) one of the candidate's own applications. Candidate-only
-    + ownership-checked. GET shows a confirm page; POST performs the withdrawal."""
     application = get_object_or_404(Application, pk=pk, candidate=request.user)
 
     if request.method == "POST":
@@ -99,8 +87,6 @@ def withdraw_application(request, pk):
 
 @role_required(User.Role.CANDIDATE)
 def my_applications(request):
-    """Candidate dashboard: the candidate's own applications with status (and
-    interview details if scheduled), plus a small summary. Candidate-only."""
     applications = (
         Application.objects.filter(candidate=request.user)
         .select_related("job", "job__company")
@@ -122,8 +108,6 @@ def my_applications(request):
 
 @role_required(User.Role.EMPLOYER)
 def employer_jobs(request):
-    """Employer dashboard: the employer's own jobs with applicant counts, plus a
-    summary of totals. Employer-only."""
     jobs = (
         _own_jobs(request.user)
         .annotate(num_applicants=Count("application"))
@@ -141,7 +125,6 @@ def employer_jobs(request):
 
 @role_required(User.Role.EMPLOYER)
 def job_create(request):
-    """Create a new job for the logged-in employer's company. Employer-only."""
     profile = getattr(request.user, "companyprofile", None)
     if profile is None:
         messages.error(request, "You need a company profile before posting jobs.")
@@ -163,7 +146,6 @@ def job_create(request):
 
 @role_required(User.Role.EMPLOYER)
 def job_edit(request, pk):
-    """Edit one of the employer's own jobs. Employer-only + ownership-checked."""
     job = get_object_or_404(_own_jobs(request.user), pk=pk)
 
     if request.method == "POST":
@@ -180,8 +162,6 @@ def job_edit(request, pk):
 
 @role_required(User.Role.EMPLOYER)
 def job_delete(request, pk):
-    """Delete one of the employer's own jobs. Employer-only + ownership-checked.
-    GET shows a confirm page (no-JS fallback); POST performs the delete."""
     job = get_object_or_404(_own_jobs(request.user), pk=pk)
 
     if request.method == "POST":
@@ -197,8 +177,6 @@ def job_delete(request, pk):
 
 @role_required(User.Role.EMPLOYER)
 def job_applicants(request, pk):
-    """List the applicants for one of the employer's own jobs, each with a status
-    form and interview state. Employer-only + ownership-checked."""
     job = get_object_or_404(_own_jobs(request.user), pk=pk)
     applications = job.application_set.select_related("candidate").order_by("-created_at")
     # Pair each application with a bound status form for inline editing.
@@ -208,8 +186,6 @@ def job_applicants(request, pk):
 
 @role_required(User.Role.EMPLOYER)
 def update_status(request, pk):
-    """Change the status of an application to one of the employer's own jobs.
-    Employer-only + ownership-checked."""
     application = get_object_or_404(_employer_applications(request.user), pk=pk)
 
     if request.method == "POST":
@@ -225,8 +201,6 @@ def update_status(request, pk):
 
 @role_required(User.Role.EMPLOYER)
 def schedule_interview(request, pk):
-    """Create or edit the interview for an application to one of the employer's
-    own jobs (one interview per application). Employer-only + ownership-checked."""
     application = get_object_or_404(_employer_applications(request.user), pk=pk)
 
     # Interview is a OneToOne; it may not exist yet.

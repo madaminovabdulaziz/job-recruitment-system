@@ -11,26 +11,18 @@ from .serializers import (
 
 
 class JobListAPIView(generics.ListAPIView):
-    """GET /api/jobs/ — list active jobs. Public, read-only."""
-
     serializer_class = JobListSerializer
     permission_classes = [AllowAny]
     queryset = Job.objects.filter(is_active=True).order_by("-created_at")
 
 
 class JobDetailAPIView(generics.RetrieveAPIView):
-    """GET /api/jobs/<id>/ — single job detail. Public, read-only.
-    Returns 404 for an unknown id."""
-
     serializer_class = JobDetailSerializer
     permission_classes = [AllowAny]
     queryset = Job.objects.all()
 
 
 class ApplicationListAPIView(generics.ListAPIView):
-    """GET /api/applications/ — the logged-in user's own applications only.
-    Permission-gated: anonymous requests are rejected."""
-
     serializer_class = ApplicationSerializer
     permission_classes = [IsAuthenticated]
 

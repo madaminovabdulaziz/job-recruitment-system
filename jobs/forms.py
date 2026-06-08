@@ -4,8 +4,6 @@ from .models import Application, Interview, Job
 
 
 def _bootstrap(fields):
-    """Apply Bootstrap classes to a form's widgets based on their type.
-    Keeps each form's __init__ short and consistent."""
     for field in fields.values():
         widget = field.widget
         if isinstance(widget, forms.CheckboxInput):
@@ -17,9 +15,6 @@ def _bootstrap(fields):
 
 
 class JobForm(forms.ModelForm):
-    """Create/update form for a Job. The owning company is set
-    in the view from the logged-in employer, so it isn't a form field."""
-
     class Meta:
         model = Job
         fields = [
@@ -38,9 +33,6 @@ class JobForm(forms.ModelForm):
 
 
 class ApplicationForm(forms.ModelForm):
-    """A candidate's application to a job — just the cover letter. The job and
-    candidate are set in the view."""
-
     class Meta:
         model = Application
         fields = ["cover_letter"]
@@ -52,8 +44,6 @@ class ApplicationForm(forms.ModelForm):
 
 
 class StatusForm(forms.ModelForm):
-    """Employer-side form to change an application's status."""
-
     class Meta:
         model = Application
         fields = ["status"]
@@ -65,8 +55,6 @@ class StatusForm(forms.ModelForm):
 
 
 class InterviewForm(forms.ModelForm):
-    """Create/edit the interview for an application."""
-
     class Meta:
         model = Interview
         fields = ["scheduled_at", "mode", "location_or_link", "notes"]

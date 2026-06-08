@@ -10,19 +10,13 @@ from .models import User
 
 
 def register(request):
-    """Register a new account and choose a role.
-
-    Anyone (anonymous) can register. Employers also get a CompanyProfile
-    created from the company fields on the form. On success the user is logged
-    in and sent to their dashboard.
-    """
     if request.user.is_authenticated:
         return redirect("dashboard")
 
     if request.method == "POST":
         form = RegisterForm(request.POST)
         if form.is_valid():
-            user = form.save()  # saves username, email, role, hashed password
+            user = form.save()
             if user.role == User.Role.EMPLOYER:
                 CompanyProfile.objects.create(
                     owner=user,
@@ -42,7 +36,6 @@ def register(request):
 
 @login_required
 def dashboard(request):
-    """Send a logged-in user to the right dashboard for their role."""
     if request.user.role == User.Role.EMPLOYER:
         return redirect("employer_jobs")
     return redirect("my_applications")
